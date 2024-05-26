@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.List;
 
 /**
@@ -38,8 +40,24 @@ public class CucumberDoublyLinkedListSteps {
         values.forEach(list::append);
         arrayFromValues = values.stream().mapToDouble(Double::doubleValue).toArray();
     }
-
+    @Given("a list containing {string}")
+    public void a_list_containing(String elements) {
+        list = new DoublyLinkedList();
+        for (String element : elements.split(", ")) {
+            list.insert(Double.parseDouble(element.trim())); // Using insert for sorted insertion
+        }
+    }
     // When -----------------------------------------------------------------------
+    @When("I insert the element {string}")
+    public void i_insert_the_element(String element) {
+        list.insert(Double.parseDouble(element)); // Using insert for sorted insertion
+    }
+    @When("I insert the elements {string}")
+    public void i_insert_the_elements(String elements) {
+        for (String element : elements.split(", ")) {
+            list.insert(Double.parseDouble(element.trim())); // Using insert for sorted insertion
+        }
+    }
 
     @When("^I append an element with value (\\d+.\\d+)$")
     public void iAppendAnElementWithValue(double value) {
@@ -58,6 +76,15 @@ public class CucumberDoublyLinkedListSteps {
     }
 
     // Then -----------------------------------------------------------------------
+  @Then("the list should contain {string}")
+    public void the_list_should_contain(String expected) {
+        assertEquals(expected, list.toString());
+    }
+
+    @Then("the list should be {string}")
+    public void the_list_should_be(String expected) {
+        assertEquals(expected, list.toString());
+    }
 
     @Then("^the list should contain that element$")
     public void theListShouldContainThatElement() {
@@ -78,4 +105,5 @@ public class CucumberDoublyLinkedListSteps {
     public void theListShouldContainElement(int count) {
         Assertions.assertEquals(count, list.getLength());
     }
+    
 }
